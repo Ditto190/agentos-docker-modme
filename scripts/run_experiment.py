@@ -5,9 +5,9 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
-import sys
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -67,7 +67,8 @@ def main() -> int:
     )
 
     if config.agent_id not in AGENTS:
-        raise SystemExit(f"Unsupported --agent-id '{config.agent_id}'. Choose one of: {', '.join(sorted(AGENTS))}")
+        print(f"Unsupported --agent-id '{config.agent_id}'. Choose one of: {', '.join(sorted(AGENTS))}", file=sys.stderr)
+        return 1
 
     artifact_file = _artifact_path(config.artifacts_dir)
     base_payload: dict[str, object] = {

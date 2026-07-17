@@ -24,7 +24,7 @@ Clone https://github.com/agno-agi/agentos-docker.git into a folder called agent-
 
 Your coding agent drives the whole flow: it checks Docker, sets up `.env`, boots the platform, verifies the MCP endpoint, and builds your first agent with you. Prefer to drive yourself? See [Manual Setup](#manual-setup).
 
-> Env templates: `example.env` remains the canonical template for historical compatibility; `.env.example` mirrors it for ecosystem tooling that auto-detects that filename.
+> Env templates: `.env.example` is canonical; `example.env` is kept as a compatibility symlink.
 
 ## Built for agents
 
@@ -46,7 +46,7 @@ git clone https://github.com/agno-agi/agentos-docker.git agentos
 cd agentos
 
 # Configure credentials
-cp example.env .env   # equivalent template: .env.example
+cp .env.example .env
 # Open .env and set OPENAI_API_KEY
 
 # Run the platform on docker
@@ -77,7 +77,7 @@ python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m pip install -e .[dev]
-cp example.env .env   # equivalent template: .env.example
+cp .env.example .env
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 

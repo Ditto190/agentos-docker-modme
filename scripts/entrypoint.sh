@@ -29,9 +29,9 @@ if [[ -z "${OPENAI_API_KEY:-}" ]]; then
     exit 1
 fi
 
-IS_PROD_RUNTIME=false
-if [[ "${RUNTIME_ENV:-prd}" != "dev" ]]; then
-    IS_PROD_RUNTIME=true
+IS_PROD_RUNTIME=true
+if [[ "${RUNTIME_ENV:-prd}" == "dev" ]]; then
+    IS_PROD_RUNTIME=false
 fi
 
 MISSING_JWT_CONFIG=false
