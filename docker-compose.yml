@@ -1,3 +1,5 @@
+# NOTE: Kept in sync with compose.yaml for contributors who still use the
+# historical docker-compose.yml filename.
 services:
   agentos-db:
     image: agnohq/pgvector:18

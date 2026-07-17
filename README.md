@@ -44,7 +44,7 @@ git clone https://github.com/agno-agi/agentos-docker.git agentos
 cd agentos
 
 # Configure credentials
-cp .env.example .env
+cp example.env .env   # equivalent template: .env.example
 # Open .env and set OPENAI_API_KEY
 
 # Run the platform on docker
@@ -75,7 +75,7 @@ python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m pip install -e .[dev]
-cp .env.example .env
+cp example.env .env   # equivalent template: .env.example
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 

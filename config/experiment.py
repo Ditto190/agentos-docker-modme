@@ -45,12 +45,12 @@ class ExperimentConfig:
     ) -> "ExperimentConfig":
         return replace(
             self,
-            agent_id=agent_id or self.agent_id,
-            task_input=task_input or self.task_input,
-            model=model or self.model,
+            agent_id=self.agent_id if agent_id is None else agent_id,
+            task_input=self.task_input if task_input is None else task_input,
+            model=self.model if model is None else model,
             temperature=self.temperature if temperature is None else temperature,
             seed=self.seed if seed is None else seed,
-            dataset=dataset or self.dataset,
-            session_id=session_id or self.session_id,
-            artifacts_dir=artifacts_dir or self.artifacts_dir,
+            dataset=self.dataset if dataset is None else dataset,
+            session_id=self.session_id if session_id is None else session_id,
+            artifacts_dir=self.artifacts_dir if artifacts_dir is None else artifacts_dir,
         )

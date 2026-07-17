@@ -30,7 +30,7 @@ if [[ -z "${OPENAI_API_KEY:-}" ]]; then
 fi
 
 if [[ "${RUNTIME_ENV:-prd}" != "dev" ]] && [[ -z "${JWT_VERIFICATION_KEY:-}" ]] && [[ -z "${JWT_JWKS_FILE:-}" ]]; then
-    echo -e "    ${BOLD}Startup diagnostics:${NC} set JWT_VERIFICATION_KEY or JWT_JWKS_FILE in production."
+    echo -e "    ${BOLD}Startup diagnostics:${NC} JWT_VERIFICATION_KEY or JWT_JWKS_FILE required for auth in production."
     exit 1
 fi
 
