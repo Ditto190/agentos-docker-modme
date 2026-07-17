@@ -29,7 +29,17 @@ if [[ -z "${OPENAI_API_KEY:-}" ]]; then
     exit 1
 fi
 
-if [[ "${RUNTIME_ENV:-prd}" != "dev" ]] && [[ -z "${JWT_VERIFICATION_KEY:-}" ]] && [[ -z "${JWT_JWKS_FILE:-}" ]]; then
+IS_PROD_RUNTIME=false
+if [[ "${RUNTIME_ENV:-prd}" != "dev" ]]; then
+    IS_PROD_RUNTIME=true
+fi
+
+MISSING_JWT_CONFIG=false
+if [[ -z "${JWT_VERIFICATION_KEY:-}" ]] && [[ -z "${JWT_JWKS_FILE:-}" ]]; then
+    MISSING_JWT_CONFIG=true
+fi
+
+if [[ "$IS_PROD_RUNTIME" = true ]] && [[ "$MISSING_JWT_CONFIG" = true ]]; then
     echo -e "    ${BOLD}Startup diagnostics:${NC} JWT_VERIFICATION_KEY or JWT_JWKS_FILE required for auth in production."
     exit 1
 fi

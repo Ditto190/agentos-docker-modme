@@ -6,29 +6,38 @@ from dataclasses import dataclass, replace
 from os import getenv
 from pathlib import Path
 
+DEFAULT_AGENT_ID = "web-search"
+DEFAULT_TASK_INPUT = "What is AgentOS and what can it do?"
+DEFAULT_MODEL = "gpt-5.6-sol"
+DEFAULT_TEMPERATURE = 0.0
+DEFAULT_SEED = 42
+DEFAULT_DATASET = "manual"
+DEFAULT_SESSION_ID = "research-session"
+DEFAULT_ARTIFACTS_DIR = Path("artifacts")
+
 
 @dataclass(frozen=True)
 class ExperimentConfig:
-    agent_id: str = "web-search"
-    task_input: str = "What is AgentOS and what can it do?"
-    model: str = "gpt-5.6-sol"
-    temperature: float = 0.0
-    seed: int = 42
-    dataset: str = "manual"
-    session_id: str = "research-session"
-    artifacts_dir: Path = Path("artifacts")
+    agent_id: str = DEFAULT_AGENT_ID
+    task_input: str = DEFAULT_TASK_INPUT
+    model: str = DEFAULT_MODEL
+    temperature: float = DEFAULT_TEMPERATURE
+    seed: int = DEFAULT_SEED
+    dataset: str = DEFAULT_DATASET
+    session_id: str = DEFAULT_SESSION_ID
+    artifacts_dir: Path = DEFAULT_ARTIFACTS_DIR
 
     @classmethod
     def from_env(cls) -> "ExperimentConfig":
         return cls(
-            agent_id=getenv("EXPERIMENT_AGENT_ID", cls.agent_id),
-            task_input=getenv("EXPERIMENT_TASK_INPUT", cls.task_input),
-            model=getenv("EXPERIMENT_MODEL", cls.model),
-            temperature=float(getenv("EXPERIMENT_TEMPERATURE", str(cls.temperature))),
-            seed=int(getenv("EXPERIMENT_SEED", str(cls.seed))),
-            dataset=getenv("EXPERIMENT_DATASET", cls.dataset),
-            session_id=getenv("EXPERIMENT_SESSION_ID", cls.session_id),
-            artifacts_dir=Path(getenv("EXPERIMENT_ARTIFACTS_DIR", str(cls.artifacts_dir))),
+            agent_id=getenv("EXPERIMENT_AGENT_ID", DEFAULT_AGENT_ID),
+            task_input=getenv("EXPERIMENT_TASK_INPUT", DEFAULT_TASK_INPUT),
+            model=getenv("EXPERIMENT_MODEL", DEFAULT_MODEL),
+            temperature=float(getenv("EXPERIMENT_TEMPERATURE", str(DEFAULT_TEMPERATURE))),
+            seed=int(getenv("EXPERIMENT_SEED", str(DEFAULT_SEED))),
+            dataset=getenv("EXPERIMENT_DATASET", DEFAULT_DATASET),
+            session_id=getenv("EXPERIMENT_SESSION_ID", DEFAULT_SESSION_ID),
+            artifacts_dir=Path(getenv("EXPERIMENT_ARTIFACTS_DIR", str(DEFAULT_ARTIFACTS_DIR))),
         )
 
     def with_overrides(

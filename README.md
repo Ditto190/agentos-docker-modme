@@ -24,6 +24,8 @@ Clone https://github.com/agno-agi/agentos-docker.git into a folder called agent-
 
 Your coding agent drives the whole flow: it checks Docker, sets up `.env`, boots the platform, verifies the MCP endpoint, and builds your first agent with you. Prefer to drive yourself? See [Manual Setup](#manual-setup).
 
+> Env templates: `example.env` remains the canonical template for historical compatibility; `.env.example` mirrors it for ecosystem tooling that auto-detects that filename.
+
 ## Built for agents
 
 This codebase comes with:
