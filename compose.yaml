@@ -11,6 +11,11 @@ services:
       POSTGRES_USER: ${DB_USER:-ai}
       POSTGRES_PASSWORD: ${DB_PASS:-ai}
       POSTGRES_DB: ${DB_DATABASE:-ai}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ai} -d ${DB_DATABASE:-ai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - agentos
 
@@ -21,14 +26,16 @@ services:
     container_name: agentos-api
     image: ${IMAGE_NAME:-agentos}:${IMAGE_TAG:-latest}
     # --reload-dir limits the watcher to dirs that contain runtime code.
+    # docker-compose.yml is a compatibility alias for this same config.
     command: >
       uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-      --reload-dir agents --reload-dir app --reload-dir db --reload-dir evals --reload-dir workflows
+      --reload-dir agents --reload-dir app --reload-dir config --reload-dir db --reload-dir evals --reload-dir tools --reload-dir workflows
     restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
       - .:/app
+      - ./artifacts:/app/artifacts
     env_file:
       - path: .env
         required: false
@@ -43,11 +50,18 @@ services:
       DB_PASS: ${DB_PASS:-ai}
       DB_DATABASE: ${DB_DATABASE:-ai}
     depends_on:
-      - agentos-db
+      # Wait for database health before API startup.
+      agentos-db:
+        condition: service_healthy
     networks:
       - agentos
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
 
 networks:
   agentos:
