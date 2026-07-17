@@ -26,6 +26,7 @@ services:
     container_name: agentos-api
     image: ${IMAGE_NAME:-agentos}:${IMAGE_TAG:-latest}
     # --reload-dir limits the watcher to dirs that contain runtime code.
+    # Keep this list in sync with docker-compose.yml (a symlink to this file).
     command: >
       uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
       --reload-dir agents --reload-dir app --reload-dir config --reload-dir db --reload-dir evals --reload-dir tools --reload-dir workflows
@@ -49,6 +50,7 @@ services:
       DB_PASS: ${DB_PASS:-ai}
       DB_DATABASE: ${DB_DATABASE:-ai}
     depends_on:
+      # Wait for database health before API startup.
       agentos-db:
         condition: service_healthy
     networks:

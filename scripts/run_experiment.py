@@ -35,15 +35,15 @@ def _artifact_path(artifacts_dir: Path) -> Path:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--agent-id", dest="agent_id")
-    parser.add_argument("--task-input", dest="task_input")
-    parser.add_argument("--model", dest="model")
-    parser.add_argument("--temperature", type=float)
-    parser.add_argument("--seed", type=int)
-    parser.add_argument("--dataset", dest="dataset")
-    parser.add_argument("--session-id", dest="session_id")
-    parser.add_argument("--artifacts-dir", type=Path)
-    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--agent-id", dest="agent_id", help="Agent id to run (web-search, platform-manager, agent-builder)")
+    parser.add_argument("--task-input", dest="task_input", help="Prompt/input sent to the selected agent")
+    parser.add_argument("--model", dest="model", help="Requested model label recorded in run metadata for auditing")
+    parser.add_argument("--temperature", type=float, help="Requested temperature recorded in run metadata for auditing")
+    parser.add_argument("--seed", type=int, help="Integer seed recorded in run metadata for reproducibility tracking")
+    parser.add_argument("--dataset", dest="dataset", help="Dataset or experiment cohort label written into artifacts")
+    parser.add_argument("--session-id", dest="session_id", help="Session id used for the agent run")
+    parser.add_argument("--artifacts-dir", type=Path, help="Directory where run artifacts are saved")
+    parser.add_argument("--dry-run", action="store_true", help="Write an artifact without calling model/tools")
     return parser.parse_args()
 
 

@@ -29,12 +29,22 @@ class ExperimentConfig:
 
     @classmethod
     def from_env(cls) -> "ExperimentConfig":
+        temperature_raw = getenv("EXPERIMENT_TEMPERATURE", str(DEFAULT_TEMPERATURE))
+        seed_raw = getenv("EXPERIMENT_SEED", str(DEFAULT_SEED))
+        try:
+            temperature = float(temperature_raw)
+        except ValueError as exc:
+            raise ValueError(f"EXPERIMENT_TEMPERATURE must be a float, got: {temperature_raw!r}") from exc
+        try:
+            seed = int(seed_raw)
+        except ValueError as exc:
+            raise ValueError(f"EXPERIMENT_SEED must be an integer, got: {seed_raw!r}") from exc
         return cls(
             agent_id=getenv("EXPERIMENT_AGENT_ID", DEFAULT_AGENT_ID),
             task_input=getenv("EXPERIMENT_TASK_INPUT", DEFAULT_TASK_INPUT),
             model=getenv("EXPERIMENT_MODEL", DEFAULT_MODEL),
-            temperature=float(getenv("EXPERIMENT_TEMPERATURE", str(DEFAULT_TEMPERATURE))),
-            seed=int(getenv("EXPERIMENT_SEED", str(DEFAULT_SEED))),
+            temperature=temperature,
+            seed=seed,
             dataset=getenv("EXPERIMENT_DATASET", DEFAULT_DATASET),
             session_id=getenv("EXPERIMENT_SESSION_ID", DEFAULT_SESSION_ID),
             artifacts_dir=Path(getenv("EXPERIMENT_ARTIFACTS_DIR", str(DEFAULT_ARTIFACTS_DIR))),

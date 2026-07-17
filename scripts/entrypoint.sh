@@ -45,7 +45,7 @@ if [[ "$IS_PROD_RUNTIME" = true ]] && [[ "$MISSING_JWT_CONFIG" = true ]]; then
 fi
 
 if [[ -n "${MCP_CONNECT_SECRET:-}" ]] && [[ ${#MCP_CONNECT_SECRET} -lt 16 ]]; then
-    echo -e "    ${BOLD}Startup diagnostics:${NC} MCP_CONNECT_SECRET must be at least 16 characters."
+    echo -e "    ${BOLD}Startup diagnostics:${NC} MCP_CONNECT_SECRET must be at least 16 characters (current: ${#MCP_CONNECT_SECRET})."
     exit 1
 fi
 
