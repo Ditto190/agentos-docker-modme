@@ -35,7 +35,7 @@ def _artifact_path(artifacts_dir: Path) -> Path:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--agent-id", dest="agent_id", help="Agent id to run (web-search, platform-manager, agent-builder)")
+    parser.add_argument("--agent-id", dest="agent_id", help=f"Agent id to run ({', '.join(sorted(AGENTS))})")
     parser.add_argument("--task-input", dest="task_input", help="Prompt/input sent to the selected agent")
     parser.add_argument("--model", dest="model", help="Requested model label recorded in run metadata for auditing")
     parser.add_argument("--temperature", type=float, help="Requested temperature recorded in run metadata for auditing")
