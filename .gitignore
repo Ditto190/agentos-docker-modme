@@ -63,6 +63,8 @@ Thumbs.db
 # Project-specific
 # =========================
 tmp
+artifacts/*
+!artifacts/.gitkeep
 
 # Claude Code: ignore local/personal state. The shared dev-time skills live in
 # .agents/skills/ (committed); .claude/skills is a committed symlink into it —

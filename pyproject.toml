@@ -22,7 +22,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["agents*", "app*", "db*", "evals*", "workflows*"]
+include = ["agents*", "api*", "app*", "config*", "db*", "evals*", "tools*", "workflows*"]
 namespaces = false
 
 [tool.ruff]

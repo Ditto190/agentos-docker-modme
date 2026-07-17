@@ -44,7 +44,7 @@ git clone https://github.com/agno-agi/agentos-docker.git agentos
 cd agentos
 
 # Configure credentials
-cp example.env .env
+cp .env.example .env
 # Open .env and set OPENAI_API_KEY
 
 # Run the platform on docker
@@ -67,6 +67,31 @@ Confirm your AgentOS is running at [http://localhost:8000/docs](http://localhost
 ### Step 4: Check platform health
 
 Click **Chat** under **Platform Manager** and ask: "How healthy is the platform?" It answers from the codebase and runtime data — eval history, deployment checks, schedules, and the component you just built.
+
+### Non-Docker quickstart (optional)
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pip install -e .[dev]
+cp .env.example .env
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Postgres still runs best in Docker (`docker compose up -d agentos-db`).
+
+## Architecture at a glance
+
+```text
+agents/      -> runtime agent definitions
+workflows/   -> deterministic pipelines and scheduled jobs
+tools/       -> helper utilities and metrics for experiments/evals
+evals/       -> eval suite cases and runner entrypoint
+app/ + api/  -> AgentOS app wiring + service boundary package
+config/      -> typed experiment/runtime config helpers
+tests/       -> lightweight regression tests
+```
 
 ## Run in production
 
@@ -213,6 +238,31 @@ python -m evals -v               # stream the full run with rich panels
 
 If a case fails, run **`/eval-and-improve`** — it diagnoses each failure, fixes what's in scope, and loops until green.
 
+## Experiments and lightweight evaluation
+
+Run an auditable single-run experiment and store outputs in `./artifacts`:
+
+```sh
+python scripts/run_experiment.py --agent-id web-search --task-input "Summarize today's AI infra news" --dataset baseline
+```
+
+Evaluate a saved artifact with a measurable metric (`non_empty_response`, plus URL/length metrics):
+
+```sh
+python scripts/evaluate_artifact.py artifacts/run-<timestamp>.json
+```
+
+Environment overrides are supported for repeatability:
+
+- `EXPERIMENT_AGENT_ID`
+- `EXPERIMENT_TASK_INPUT`
+- `EXPERIMENT_MODEL`
+- `EXPERIMENT_TEMPERATURE`
+- `EXPERIMENT_SEED`
+- `EXPERIMENT_DATASET`
+- `EXPERIMENT_SESSION_ID`
+- `EXPERIMENT_ARTIFACTS_DIR`
+
 ### Maintain
 
 Because the repo is managed by coding agents, it moves fast. Run `/review-and-improve` before a release or after a refactor: it sweeps for drift between docs, code, and config, auto-fixes mechanical drift like stale paths and missing env vars, and flags anything bigger.
@@ -265,3 +315,18 @@ can you access my agentos mcp?
 - [Agno documentation](https://docs.agno.com?utm_source=github&utm_medium=example-repo&utm_campaign=agentos-docker&utm_content=agentos-docker&utm_term=docker)
 - [AgentOS introduction](https://docs.agno.com/agent-os/introduction?utm_source=github&utm_medium=example-repo&utm_campaign=agentos-docker&utm_content=agentos-docker&utm_term=docker)
 - [Agno on GitHub](https://github.com/agno-agi/agno). Drop a star if this is useful.
+
+## Troubleshooting
+
+- `OPENAI_API_KEY` missing: startup diagnostics now fail fast in the container entrypoint.
+- Production boot fails with auth error: set `JWT_VERIFICATION_KEY` or `JWT_JWKS_FILE`.
+- `MCP_CONNECT_SECRET` set but rejected: it must be at least 16 characters.
+- No artifacts persisted: confirm `./artifacts` is mounted to `/app/artifacts` in compose.
+
+## Decision log
+
+1. Keep Docker as the default execution path, while documenting a minimal non-Docker fallback for local debugging.
+2. Add `docker-compose.yml` compatibility alongside `compose.yaml` for contributor ergonomics.
+3. Keep experiment/eval tooling lightweight (`scripts/*.py` + stdlib + existing agents) to minimize dependency growth.
+4. Persist experiment outputs to host-mounted `./artifacts` for auditability and reproducibility.
+5. Extend CI with a small unittest step to ensure the new metric/eval utility remains stable.
