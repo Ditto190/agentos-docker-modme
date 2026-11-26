@@ -13,6 +13,7 @@ AgentOS  (app/main.py)
 ├── WebSearch    (agents/web_search.py)   — Parallel SDK or keyless MCPTools
 ├── Platform Manager (agents/platform_manager.py) — WorkspaceContextProvider + read-only runtime tools
 ├── Agent Builder (agents/agent_builder.py) — Agno docs MCP + StudioTools
+├── Chief Orchestrator (agents/chief_orchestrator.py) — coordinate-mode Team routing to the three agents above
 ├── DeployCheck  (workflows/deployment_check.py) — deterministic readiness workflow
 └── RunEvals     (workflows/run_evals.py) — opt-in eval suite workflow
 ```
@@ -37,6 +38,7 @@ Shared:
 | [`app/config.yaml`](app/config.yaml) | UI manifest per component (keyed by `id`): description + quick prompts. |
 | [`agents/web_search.py`](agents/web_search.py) | Reference agent — direct tools (Parallel SDK or MCP). |
 | [`agents/platform_manager.py`](agents/platform_manager.py) | Flagship agent — codebase context provider + read-only runtime tools (eval history, deployment-check reports + on-demand diagnostic run, schedules, components). |
+| [`agents/chief_orchestrator.py`](agents/chief_orchestrator.py) | Team — Chief Orchestrator routes to web-search, platform-manager and agent-builder (investigate, implement, verify); registered via `AgentOS(teams=[...])`. |
 | [`agents/agent_builder.py`](agents/agent_builder.py) | Reference agent — creates, edits, and publishes agents, teams, and workflows through StudioTools immediately; only deletes keep a HITL confirmation gate. |
 | [`workflows/deployment_check.py`](workflows/deployment_check.py) | Reference workflow — a deterministic `Step` that checks DB, auth, scheduler URL, MCP reachability, Slack config, schedule flags, and component imports; imported into `app/main.py` and passed to `AgentOS(workflows=[...])`. |
 | [`workflows/run_evals.py`](workflows/run_evals.py) | Optional workflow — runs a tagged subset of the eval suite and returns a compact report. Registered but not scheduled unless `ENABLE_SCHEDULED_EVALS=True`. |

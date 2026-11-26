@@ -22,6 +22,15 @@ manifest:
       - "What's the latest research from Anthropic?"
       - "Search for OpenAI's latest model release"
 
+  # --- Teams ---
+
+  chief-orchestrator:
+    description: "Routes work to web-search, platform-manager and agent-builder, then reports one verified outcome."
+    quick_prompts:
+      - "Describe this platform and check its health, then summarise in five lines"
+      - "Find what changed in Agno's latest release and tell me if this platform is affected"
+      - "Plan a new agent that triages GitHub issues, but do not build it yet"
+
   # --- Workflows ---
 
   deployment-check:
